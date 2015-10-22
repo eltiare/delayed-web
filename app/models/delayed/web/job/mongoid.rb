@@ -3,11 +3,11 @@ module Delayed
     class Job::Mongoid
 
       def self.find *args
-        decorate Delayed::Job.find(*args)
+        decorate Delayed::Job.unscoped.find(*args)
       end
 
       def self.all
-        jobs = Delayed::Job.order_by(created_at: 'desc').limit(100)
+        jobs = Delayed::Job.unscoped.order_by(created_at: 'desc').limit(100)
         Enumerator.new do |enumerator|
           jobs.each do |job|
             enumerator.yield decorate(job)
